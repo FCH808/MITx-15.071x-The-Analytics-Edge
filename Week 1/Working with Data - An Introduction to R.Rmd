@@ -1,0 +1,111 @@
+---
+title: "Working with Data - An Introduction to R"
+author: "Fernando Hernandez"
+date: "Thursday, March 05, 2015"
+output: html_document
+---
+
+QUICK QUESTIONS FOR INSTALLING R  (2 points possible)
+When you start R, you should see a window titled "R Console". In this window, there is some text, and then at the bottom there should be a > symbol (greater than symbol), followed by a blinking cursor. At the cursor, type:
+
+- sd(c(5,8,12))
+
+and then hit enter. You should see [1] followed by a number. What is this number?
+
+```{r}
+sd(c(5,8,12))
+```
+
+Now type:
+
+- which.min(c(4,1,6))
+
+at the cursor, and hit enter. You should again see [1], followed by a number. What is this number?
+```{r}
+which.min(c(4,1,6))
+```
+
+IMPORTANT NOTE
+
+If you downloaded and installed R in a location other than the United States, you might encounter some formating issues later in this class due to language differences. To fix this, you will need to type in your R console:
+
+- Sys.setlocale("LC_ALL", "C")
+
+This will only change the locale for your current R session, so please make a note to run this command when you are working on any lectures or exercises that might depend on the English lanugage (for example, the names for the days of the week).
+
+
+QUICK QUESTION  (1/1 point)
+At which university was the first version of R developed?
+
+- University of Auckland
+
+QUICK QUESTION  (1/1 point)
+Which of the following are recommended variable names in R? (Select all that apply.)
+
+- SquareRoot2
+- Square2.Root
+
+If you want to add new observations to a data frame, what should you use?
+
+- The rbind function. 
+
+If you want to combine two vectors into a data frame, what should you use?
+
+- The data.frame function. 
+
+If you want to add a variable to your data frame, what should you use?
+
+- The dollar sign notation. 
+
+If you want to know the mean value of a numerical variable, which function could you use?
+
+- summary()
+
+If you want to know the standard deviation of a numerical variable, which function could you use?
+
+- sd()
+
+QUICK QUESTION  (3 points possible)
+Please answer the following questions using the entire data frame WHO (and not one of the subsets we have created in R).
+
+What is the mean value of the "Over60" variable?
+```{r}
+setInternet2(use = TRUE)
+WHO <- read.csv("https://courses.edx.org/c4x/MITx/15.071x_2/asset/WHO.csv")
+summary(WHO)
+```
+
+Which country has the smallest percentage of the population over 60?
+```{r, message=FALSE}
+library(dplyr)
+
+WHO %>%
+  select(Country, Over60) %>%
+  arrange(Over60) %>%
+  head()
+
+```
+
+Which country has the largest literacy rate?
+```{r}
+WHO %>%
+  select(Country, LiteracyRate) %>%
+  arrange(-LiteracyRate) %>%
+  head()
+```
+
+QUICK QUESTION  (1 point possible)
+Use the tapply function to find the average child mortality rate of countries in each region.
+
+Which region has the lowest average child mortality rate across all countries in that region?
+
+```{r}
+head(sort(tapply(WHO$ChildMortality, WHO$Region, min, na.rm=TRUE)))
+
+WHO %>%
+  group_by(Region) %>%
+  summarize(min_cr = min(ChildMortality, na.rm=TRUE)) %>%
+  arrange(min_cr)
+
+```
+
